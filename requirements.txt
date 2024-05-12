@@ -1,0 +1,10 @@
+langchain
+langchain_openai
+langchain-pinecone
+pinecone-client
+fastapi
+torch
+sentence_transformers
+BeautifulSoup4
+python-dotenv
+ruff
