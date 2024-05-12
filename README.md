@@ -21,11 +21,11 @@ This chatbot should respond to user inquiries based on existing information on t
 Here are some guidelines on how to proceed:
 
 - Employ PineCone vector database to index and retrieve SylloTips website snippets ([www.syllotips.com](www.syllotips.com)). We have already configured a project and index on PineCone for you. Here are the credentials to access it: [credentials]. Remember, the index is configured to utilize the dot product as the method to compute similarity.
-  ## - PINECONE_API_KEY = "049f0927-0d19-4e1b-9142-81b515f08787"
-  ## - PINECONE_INDEX_NAME = "raima-isla-code-exercise"
+  - PINECONE_API_KEY = "049f0927-0d19-4e1b-9142-81b515f08787"
+  - PINECONE_INDEX_NAME = "raima-isla-code-exercise"
 - Utilize a local instance of the following sentence embedding model to compute the snippet embeddings: [link to model]. To execute the model, use the SentenceTransformer library from HuggingFace. Do not be concerned about pushing the model weights to GitHub; please use a `.gitignore` for that purpose. Remember that the default similarity method for these embeddings is cosine similarity, but the PineCone index uses the dot product. There's a workaround available to make this functional.
 - Once you've indexed the website, proceed with setting up the RAG pipeline using langchain. As a large language model, you can select any OpenAI model. Feel free to use the provided API key:
-  ## OPENAI_API_KEY = "sk-proj-RTecz6DjaUKH5OzOyZGsT3BlbkFJoGLVOWRFUCe4vR2V0s4H"
+  - OPENAI_API_KEY = "sk-proj-RTecz6DjaUKH5OzOyZGsT3BlbkFJoGLVOWRFUCe4vR2V0s4H"
 
 ### Additional Tips
 - To simplify the task, you need not worry about streaming the chatbot responses for now. However, we expect you to utilize `async/await` methods to handle API calls efficiently.
