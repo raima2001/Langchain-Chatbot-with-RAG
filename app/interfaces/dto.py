@@ -12,4 +12,4 @@ class EasyRAGRequest(BaseModel):
     """Request body for index drive item"""
 
     query: str
-    chat_history: List[str]
+    chat_history: List[str] #Feel free to modify this type as needed
