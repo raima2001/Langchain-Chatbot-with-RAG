@@ -7,4 +7,6 @@ __pycache__
 
 test/
 
+models/
+
 .ruff_cache

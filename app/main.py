@@ -1,10 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routes import router
+from app.routes import easy_rag
 
 app = FastAPI()
 
 origins = ["*"]
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -14,4 +15,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(router, prefix="/api")
+app.include_router(easy_rag.router)
+
+# , prefix="/api"
