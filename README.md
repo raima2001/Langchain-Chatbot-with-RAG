@@ -31,4 +31,3 @@ To just test the chatbot:
 
 Example outputs from Chatbot!
 
-![Screenshot 2024-05-26 205003](https://github.com/SylloTips/raima-islam-code-exercise/assets/66533777/48f71901-6039-4ad5-b810-a84e10766921)
