@@ -7,7 +7,8 @@ router = APIRouter()
 
 @router.post("/do-an-easy-index", dependencies=[])
 async def index_website_controller(request: EasyIndexRequest):
-    result = await easy_index_utils('https://www.syllotips.com/')
+    website = request.website
+    result = await easy_index_utils(website)
     if "error" in result:
         raise HTTPException(status_code=500, detail=result["error"])
     return JSONResponse(content=result, status_code=200)

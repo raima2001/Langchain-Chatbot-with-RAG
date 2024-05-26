@@ -1,35 +1,33 @@
 import os
 from langchain_pinecone import PineconeVectorStore
-from app.routes.easy_rag.pinecone_store import index 
-from sentence_transformers import SentenceTransformer
+from setup.pinecone_store import index_name
+from setup.embedding import model, MyOpenAIEmbeddings
 from langchain_openai import ChatOpenAI
 from langchain_core.prompts import PromptTemplate
 from langchain.chains import RetrievalQA
 from langchain.memory import ConversationBufferMemory
-
-model_name="models/multilingual-e5-base"
-model = SentenceTransformer(model_name)
+from dotenv import load_dotenv  
 
 
-def embed_texts(texts):
-    
-    
-    embeddings = model.encode(texts, normalize_embeddings=True)
-    
-    return [embedding.tolist() for embedding in embeddings]
+load_dotenv()
 
+api_key = os.getenv("OPENAI_API_KEY")
 
-os.environ["OPENAI_API_KEY"] = os.getenv("sk-proj-RTecz6DjaUKH5OzOyZGsT3BlbkFJoGLVOWRFUCe4vR2V0s4H") or "sk-proj-RTecz6DjaUKH5OzOyZGsT3BlbkFJoGLVOWRFUCe4vR2V0s4H"
-
-
-
-llm = ChatOpenAI(  
-    openai_api_key= os.environ["OPENAI_API_KEY"],  
-    model_name='gpt-4o' 
-    
+llm = ChatOpenAI(
+    api_key= api_key,  
+    model_name='gpt-4o'    
 )
+
 template = """
-Use the following context provided about Syllotips (delimited by <ctx></ctx>) and the chat history (delimited by <hs></hs>) to answer the questions from the user. If you dont have any answer just write "I don't know":
+You are now acting as a helpful chatbot agent for Syllotips.
+Use the following context provided of Syllotips (delimited by <ctx></ctx>),
+even if the context does not have the answer, try to look through other chunks 
+and find proper similar chunks where the answer is situated, 
+answer the questions properly, relating to the proper information of Syllotips and the chat history (delimited by <hs></hs>) to answer the questions from the user.
+Don't add unnecesssary info and stick to the point but try to add all the relevant and necessary info.
+If you properly give outputs from the Syllotips provided context, I will give you
+20 dollars. So dont miss any information. 
+If they are asking questions not related to the context of Syllotips, just say "I cannot answer this question":
 ------
 <ctx>
 {context}
@@ -52,35 +50,18 @@ memory = ConversationBufferMemory(
     input_key="question"
 )
 
-
-
-class MyOpenAIEmbeddings:
-    def __init__(self, model):
-        self.model = model
-
-    def embed_query(self, query):
-        embeddings = embed_texts([query])
-        return embeddings[0]
-
-
 embed_model = MyOpenAIEmbeddings(model)
 
-print(embed_model)
-
-text_field ='text'
-
-
-vectorstore = PineconeVectorStore(
-    index=index,
-    embedding=embed_model,  
-    text_key=text_field
+vectorstore = PineconeVectorStore.from_existing_index(
+    index_name=index_name,
+    embedding=embed_model     
 )
 
 qa = RetrievalQA.from_chain_type(
     llm=llm,
     chain_type='stuff',
-    retriever=vectorstore.as_retriever(),
-    verbose=True,
+    retriever=vectorstore.as_retriever(search_type="similarity", search_kwargs={'k': 20}),
+    verbose=False,
     chain_type_kwargs={
         "verbose": False,
         "prompt": prompt,
@@ -97,7 +78,7 @@ def initialize_qa_system():
             retriever=vectorstore.as_retriever(),
             verbose=True,
             chain_type_kwargs={
-                "verbose": False,
+                "verbose": True,
                 "prompt": prompt,
                 "memory": memory,
             }
@@ -105,8 +86,10 @@ def initialize_qa_system():
 
 def ask_question(query):
     initialize_qa_system()
-    response = qa.run(query)
+    response = qa.invoke(query)
     return response
+
+#Try the User Input Chatbot
 
 def main():
     print("You can start asking questions. Type 'quit' to end the conversation.")
@@ -116,9 +99,8 @@ def main():
             print("Ending the conversation. Goodbye!")
             break
         
-        # Run the conversation chain with user input
         response = ask_question(user_input)
-        print(f"Assistant: {response}")
+        print(f"Assistant: {response.get('result')}")
 
 if __name__ == "__main__":
     main()
