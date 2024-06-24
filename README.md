@@ -1,5 +1,3 @@
-# Raima Islam Application Code Challenge 💻🚀
-Hello, I have incorporated the necessary changes.
 
 Just some disclaimers: 
 
@@ -31,4 +29,4 @@ To just test the chatbot:
 
 Example outputs from Chatbot!
 
-![Screenshot 2024-05-26 230350](https://github.com/SylloTips/raima-islam-code-exercise/assets/66533777/ba2fb29d-fc9c-49a7-987b-6cd3fb83a2cf)
+

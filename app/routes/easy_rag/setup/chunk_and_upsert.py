@@ -19,6 +19,7 @@ def embed_and_upsert_website(website_url):
 
     # Split the document into chunks
     wb_chunks = text_splitter.split_documents(wb_loader_doc)
+    print(wb_chunks)
 
     # Extract metadata and text content from each chunk
     wb_chunks_text = [{'title': doc.metadata.get('title', ''), 'source': doc.metadata.get('source', ''), 'page_content': doc.page_content} for doc in wb_chunks]
